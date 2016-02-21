@@ -8,7 +8,7 @@
 #ifndef SRC_BBBLSM303DLHC_H_
 #define SRC_BBBLSM303DLHC_H_
 
-#include "BBBI2CDevice.h"
+#include "include/BBBI2CDevice.h"
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>

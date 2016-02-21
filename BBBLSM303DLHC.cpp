@@ -6,7 +6,7 @@
 //  Copyright © 2015 Michael Brookes. All rights reserved.
 //
 
-#include "BBBLSM303DLHC.h"
+#include "include/BBBLSM303DLHC.h"
 
 /**
  \brief BBBLSM303DLHC : A class that provides control of the accelerometer LSM303DLHC and extends I2C devices on the Beaglebone Black.
