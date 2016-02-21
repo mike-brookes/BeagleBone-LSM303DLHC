@@ -303,7 +303,7 @@ protected:
      \param <void>
      \return <short> this->X
      */
-    short GetAccelX( void );
+    double GetAccelX( void );
 
     /**
      \fn Protected function GetAccelY( void )
@@ -311,7 +311,7 @@ protected:
      \param <void>
      \return <short> this->Y
      */
-    short GetAccelY( void );
+    double GetAccelY( void );
 
     /**
      \fn Protected function GetAccelZ( void )
@@ -319,7 +319,7 @@ protected:
      \param <void>
      \return <short> this->Z
      */
-    short GetAccelZ( void );
+    double GetAccelZ( void );
 
     /**
      \fn Protected function GetMagX( void )
@@ -327,7 +327,7 @@ protected:
      \param <void>
      \return <short> this->M_X
      */
-    float GetMagX( void );
+    double GetMagX( void );
 
     /**
      \fn Protected function GetMagY( void )
@@ -335,7 +335,7 @@ protected:
      \param <void>
      \return <short> this->M_Y
      */
-    float GetMagY( void );
+    double GetMagY( void );
 
     /**
      \fn Protected function GetMagZ( void )
@@ -343,7 +343,7 @@ protected:
      \param <void>
      \return <short> this->M_Z
      */
-    float GetMagZ( void );
+    double GetMagZ( void );
 
     void AddToPitchAndRollDataStore( );
 
