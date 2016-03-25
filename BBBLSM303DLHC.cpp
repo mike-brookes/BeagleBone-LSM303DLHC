@@ -12,10 +12,10 @@
  \brief BBBLSM303DLHC : A class that provides control of the accelerometer LSM303DLHC and extends I2C devices on the Beaglebone Black.
   BBBI2CDevice : A low level control of I2C devices on the Beaglebone Black. requires :
  \param <int> I2C_DeviceAddress (obtained from your I2C device data sheet, usually passed in hex (e.g 0x19)
- \param <I2CBus> I2C_BusAddress (the Beaglebone has two I2C busses, either I2C1 or I2C2 both relate to their respective files in /dev/itc-#)
+ \param <I2CBus> I2C_BusAddress (the Beaglebone has two I2C buses, either I2C1 or I2C2 both relate to their respective files in /dev/itc-#)
  */
 BBBLSM303DLHC::BBBLSM303DLHC( ) {
-
+    int u = 0;
     if( this->SetRange( _range::HIGHRES_16G ) < 0 ) {
         cerr << "Critical Error 1 : LSM303DLHC - Attempted to set the Accelerometers Range to : " << this->AccelRange << " | This action failed." << endl;
         exit( 1 );

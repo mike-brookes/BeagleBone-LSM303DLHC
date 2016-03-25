@@ -8,19 +8,20 @@
 #ifndef SRC_BBBLSM303DLHC_H_
 #define SRC_BBBLSM303DLHC_H_
 
-#include "include/BBBI2CDevice.h"
+#include "BBBI2CDevice.h"
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
+#include <unistd.h>
 
 //From Table 17. of the LSM303 Data sheet ( https://www.adafruit.com/datasheets/LSM303DLHC.PDF )
-#define ACCEL_ADDRESS        0x19    //!< I2C Address of the accelerometer device.
+#define ACCEL_ADDRESS       0x19    //!< I2C Address of the accelerometer device.
 #define CTRL_REG1_A         0x20    //!< Read/Write (power control) : Default - 00111
 #define CTRL_REG2_A         0x21    //!< Read/Write (filter selection) : Default - 0
 #define CTRL_REG3_A         0x22    //!< Read/Write (interrupt settings) : Default - 0
 #define CTRL_REG4_A         0x23    //!< Read/Write (range/resolution settings) : Default - 0
 #define CTRL_REG5_A         0x24    //!< Read/Write (FIFO setting | internal memory) : Default - 0
-#define CTRL_REG6_A         0x25    //!< Read/Write (CLICK interupt setting) : Default - 0
+#define CTRL_REG6_A         0x25    //!< Read/Write (CLICK interrupt setting) : Default - 0
 #define REFERENCE_A         0x26    //!< Read/Write (Reference value for interrupt generation) : Default - 0
 #define STATUS_REG_A        0x27    //!< Read Only  (Overrun trigger) : Default - 0
 #define OUT_X_L_A           0x28    //!< Read Only  (X-axis acceleration data. The value is expressed in 2’s complement)
@@ -46,7 +47,7 @@
 #define TIME_LATENCY_A      0x3C    //!< Read/Write (interrupt double CLICK settings)
 #define TIME_WINDOW_A       0x3D    //!< Read/Write (interrupt double CLICK settings)
 
-#define MAG_ADDRESS            0x1E    //!< I2C Address of the magnetometer device.
+#define MAG_ADDRESS         0x1E    //!< I2C Address of the magnetometer device.
 #define CRA_REG_M           0x00    //!< Read/Write (0x94 or 10010100 Temp sensor on and 30 hz refresh rate.)
 #define CRB_REG_M           0x01    //!< Read/Write
 #define MR_REG_M            0x02    //!< Read/Write (0x00 or 00000000 Continuous conversion mode.)
@@ -80,7 +81,7 @@ class BBBLSM303DLHC {
 public:
 
     /**
-     \brief Please refer to the documention provided for your LSM303DLHC for further details (CTRL_REG1_A pg 25 point 7.1.1)
+     \brief Please refer to the documentation provided for your LSM303DLHC for further details (CTRL_REG1_A pg 25 point 7.1.1)
      */
     enum _switch {
         ON = 0x77,        //!< 0x77 Normal / low-power mode off (200 Hz), X, Y and Z enabled
@@ -88,15 +89,15 @@ public:
     };
 
     /**
-     \brief Please refer to the documention provided for your LSM303DLHC for further details (CTRL_REG4_A pg 27 point 7.1.4)
+     \brief Please refer to the documentation provided for your LSM303DLHC for further details (CTRL_REG4_A pg 27 point 7.1.4)
      */
     enum _range {
-        HIGHRES_16G = 0x38, //!< 0x38 (accelerometer) continuous update (0b), data LSB @ lower address (0b), ±16 g (11b), high-resolution enable (1b), uneditable (00b), 4-wire interface (0b)
-        LOWRES_2G = 0x00  //!< 0x00 (accelerometer) continuous update (0b), data LSB @ lower address (0b), ±2 g (00b), high-resolution disable (0b), uneditable (00b), 4-wire interface (0b)
+        HIGHRES_16G = 0x38, //!< 0x38 (accelerometer) continuous update (0b), data LSB @ lower address (0b), ±16 g (11b), high-resolution enable (1b), not editable (00b), 4-wire interface (0b)
+        LOWRES_2G = 0x00  //!< 0x00 (accelerometer) continuous update (0b), data LSB @ lower address (0b), ±2 g (00b), high-resolution disable (0b), not editable (00b), 4-wire interface (0b)
     };
 
     /**
-     \brief Please refer to the documention provided for your LSM303DLHC for further details (CRA_REG_M pg 37 point 7.2.1)
+     \brief Please refer to the documentation provided for your LSM303DLHC for further details (CRA_REG_M pg 37 point 7.2.1)
      */
     enum _data_rate {
         HZ_075 = 0x80, //!< 0x80 (magnetometer) data rate = 0.75 HZ and (temp_sensor) is on.
@@ -110,7 +111,7 @@ public:
     };
 
     /**
-     \brief Please refer to the documention provided for your LSM303DLHC for further details (MR_REG_M pg 38 point 7.2.3)
+     \brief Please refer to the documentation provided for your LSM303DLHC for further details (MR_REG_M pg 38 point 7.2.3)
      */
     enum _operation_mode {
         Continuous = 0x00, //!< 0x00 Continuous-conversion mode (magnetometer)
@@ -233,7 +234,7 @@ protected:
     BBBI2CDevice Accelerometer = *new BBBI2CDevice( ACCEL_ADDRESS, BBBI2CDevice::I2C1 );
 
     /**
-     \brief Creates a new object containing communication and the setup of the magentometer.
+     \brief Creates a new object containing communication and the setup of the magnetometer.
      */
     BBBI2CDevice Magnetometer = *new BBBI2CDevice( MAG_ADDRESS, BBBI2CDevice::I2C1 );
 
@@ -291,7 +292,7 @@ protected:
 
     /**
     \fn Protected function SetHeading( void )
-    \brief Sets the current heading (this->Heading) from the magnetometer. With thanks to Adafruit for this algorythm.
+    \brief Sets the current heading (this->Heading) from the magnetometer. With thanks to Adafruit for this algorithm.
     \param <void>
     \return <void>
     */
