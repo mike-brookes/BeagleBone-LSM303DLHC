@@ -287,13 +287,13 @@ void BBBLSM303DLHC::SetHeading( void ) {
     float cosPitch = ( float ) cos( -1 * pitchRadians );
     float sinPitch = ( float ) sin( -1 * pitchRadians );
 
-    this->m.X = ( this->m.X ) * cosPitch + ( this->m.Z ) * sinPitch;
-    this->m.Y = ( this->m.X ) * sinRoll * sinPitch + ( this->m.Y ) * cosRoll - ( this->m.Z ) * sinRoll * cosPitch;
+    x2 = ( this->m.X ) * cosPitch + ( this->m.Z ) * sinPitch;
+    y2 = ( this->m.X ) * sinRoll * sinPitch + ( this->m.Y ) * cosRoll - ( this->m.Z ) * sinRoll * cosPitch;
 
-    x2 = this->m.X;
-    y2 = this->m.Y;
+    //x2 = this->m.X;
+    //y2 = this->m.Y;
 
-    this->Heading = ( atan2 ( this->m.X, this->m.Y ) * 180 ) / M_PI;
+    this->Heading = ( atan2 ( x2, y2 ) * 180 ) / M_PI;
 }
 
 /**
@@ -302,8 +302,8 @@ void BBBLSM303DLHC::SetHeading( void ) {
  \param <void>
  \return <short> this->X
  */
-double BBBLSM303DLHC::GetAccelX( void ) {
-    this->a.X = ( ( short ) this->Accelerometer.I2C_GetValue( OUT_X_H_A ) << 8 ) | ( short ) this->Accelerometer.I2C_GetValue( OUT_X_L_A );
+short BBBLSM303DLHC::GetAccelX( void ) {
+    this->a.X = ( ( this->Accelerometer.I2C_GetValue( OUT_X_H_A ) << 8 ) | this->Accelerometer.I2C_GetValue( OUT_X_L_A ) );
     this->a.X -= OFFSET_X;
     return this->a.X;
 }
@@ -314,8 +314,8 @@ double BBBLSM303DLHC::GetAccelX( void ) {
  \param <void>
  \return <short> this->Y
  */
-double BBBLSM303DLHC::GetAccelY( void ) {
-    this->a.Y = ( ( short ) this->Accelerometer.I2C_GetValue( OUT_Y_H_A ) << 8 ) | ( short ) this->Accelerometer.I2C_GetValue( OUT_Y_L_A );
+short BBBLSM303DLHC::GetAccelY( void ) {
+    this->a.Y = ( ( this->Accelerometer.I2C_GetValue( OUT_Y_H_A ) << 8 ) | this->Accelerometer.I2C_GetValue( OUT_Y_L_A ) );
     this->a.Y -= OFFSET_Y;
     return this->a.Y;
 }
@@ -326,8 +326,8 @@ double BBBLSM303DLHC::GetAccelY( void ) {
  \param <void>
  \return <short> this->Z
  */
-double BBBLSM303DLHC::GetAccelZ( void ) {
-    this->a.Z = ( ( short ) this->Accelerometer.I2C_GetValue( OUT_Z_H_A ) << 8 ) | ( short ) this->Accelerometer.I2C_GetValue( OUT_Z_L_A );
+short BBBLSM303DLHC::GetAccelZ( void ) {
+    this->a.Z = ( ( this->Accelerometer.I2C_GetValue( OUT_Z_H_A ) << 8 ) | this->Accelerometer.I2C_GetValue( OUT_Z_L_A ) );
     return this->a.Z;
 }
 
@@ -337,8 +337,8 @@ double BBBLSM303DLHC::GetAccelZ( void ) {
  \param <void>
  \return <short> this->M_X
  */
-double BBBLSM303DLHC::GetMagX( void ) {
-    this->m.X = ( ( ( short ) this->Magnetometer.I2C_GetValue( OUT_X_H_M ) << 8 ) | ( short ) this->Magnetometer.I2C_GetValue( OUT_X_L_M ) );// /1100;
+short BBBLSM303DLHC::GetMagX( void ) {
+    this->m.X = ( ( this->Magnetometer.I2C_GetValue( OUT_X_H_M ) << 8 ) | this->Magnetometer.I2C_GetValue( OUT_X_L_M ) );
     return this->m.X;
 }
 
@@ -348,8 +348,8 @@ double BBBLSM303DLHC::GetMagX( void ) {
  \param <void>
  \return <short> this->M_Y
  */
-double BBBLSM303DLHC::GetMagY( void ) {
-    this->m.Y = ( ( ( short ) this->Magnetometer.I2C_GetValue( OUT_Y_H_M ) << 8 ) | ( short ) this->Magnetometer.I2C_GetValue( OUT_Y_L_M ) ); // /1100;
+short BBBLSM303DLHC::GetMagY( void ) {
+    this->m.Y = ( ( this->Magnetometer.I2C_GetValue( OUT_Y_H_M ) << 8 ) | this->Magnetometer.I2C_GetValue( OUT_Y_L_M ) );
     return this->m.Y;
 }
 
@@ -359,7 +359,7 @@ double BBBLSM303DLHC::GetMagY( void ) {
  \param <void>
  \return <short> this->M_Z
  */
-double BBBLSM303DLHC::GetMagZ( void ) {
-    this->m.Z = ( ( ( short ) this->Magnetometer.I2C_GetValue( OUT_Z_H_M ) << 8 ) | ( short ) this->Magnetometer.I2C_GetValue( OUT_Z_L_M ) ); // /980;
+short BBBLSM303DLHC::GetMagZ( void ) {
+    this->m.Z = ( ( this->Magnetometer.I2C_GetValue( OUT_Z_H_M ) << 8 ) | this->Magnetometer.I2C_GetValue( OUT_Z_L_M ) );
     return this->m.Z;
 }

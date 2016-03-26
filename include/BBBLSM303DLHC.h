@@ -255,8 +255,8 @@ protected:
         T X, Y, Z;
     };
 
-    vector<double> a; //!< accelerometer vector (X, Y, Z)
-    vector<double> m; //!< magnetometer vector (X, Y, Z)
+    vector<short> a; //!< accelerometer vector (X, Y, Z)
+    vector<short> m; //!< magnetometer vector (X, Y, Z)
 
     /**
     \fn Protected function SetAllCurrentValues( void )
@@ -304,7 +304,7 @@ protected:
      \param <void>
      \return <short> this->X
      */
-    double GetAccelX( void );
+    short GetAccelX( void );
 
     /**
      \fn Protected function GetAccelY( void )
@@ -312,7 +312,7 @@ protected:
      \param <void>
      \return <short> this->Y
      */
-    double GetAccelY( void );
+    short GetAccelY( void );
 
     /**
      \fn Protected function GetAccelZ( void )
@@ -320,7 +320,7 @@ protected:
      \param <void>
      \return <short> this->Z
      */
-    double GetAccelZ( void );
+    short GetAccelZ( void );
 
     /**
      \fn Protected function GetMagX( void )
@@ -328,7 +328,7 @@ protected:
      \param <void>
      \return <short> this->M_X
      */
-    double GetMagX( void );
+    short GetMagX( void );
 
     /**
      \fn Protected function GetMagY( void )
@@ -336,7 +336,7 @@ protected:
      \param <void>
      \return <short> this->M_Y
      */
-    double GetMagY( void );
+    short GetMagY( void );
 
     /**
      \fn Protected function GetMagZ( void )
@@ -344,7 +344,7 @@ protected:
      \param <void>
      \return <short> this->M_Z
      */
-    double GetMagZ( void );
+    short GetMagZ( void );
 
     void AddToPitchAndRollDataStore( );
 
