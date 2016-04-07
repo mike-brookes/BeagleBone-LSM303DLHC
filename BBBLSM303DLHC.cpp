@@ -64,7 +64,6 @@ void BBBLSM303DLHC::AddToPitchAndRollDataStore( ) {
         this->PitchDataStoredValues[ i ] = this->PitchDataStoredValues[ NextIndex ];
         this->RollDataStoredValues[ i ] = this->RollDataStoredValues[ NextIndex ];
     }
-
     this->PitchDataStoredValues[ ( MAX_DATASTORE - 1 ) ] = this->Pitch;
     this->RollDataStoredValues[ ( MAX_DATASTORE - 1 ) ] = this->Roll;
 }
