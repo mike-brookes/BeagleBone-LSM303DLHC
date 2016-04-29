@@ -1,5 +1,5 @@
 //  LSM303DLHC.h
-//  LSM303DLHC
+//  BBBLSM303DLHC
 //
 //  Created by Michael Brookes on 25/10/2015.
 //  Copyright © 2015 Michael Brookes. All rights reserved.
@@ -8,7 +8,7 @@
 #ifndef SRC_LSM303DLHC_H_
 #define SRC_LSM303DLHC_H_
 
-#include "./lib/I2C/I2CDevice.h"
+#include "Lib/I2C/I2CDevice.h"
 /*
  * REGISTER ADDRESSES
  */
@@ -65,30 +65,30 @@
  * END OF REGISTER ADDRESSES
  */
 
+#define REGISTER_ZERO               0b00000000
+
 /*
  * POWER SETTINGS - REGISTER TO WRITE TO : CTRL_REG1_A 0x20
  */
-#define POWER_DEFAULT               0x07
-#define POWER_DOWN                  0x00
+#define POWER_OFF                   REGISTER_ZERO
+#define DATA_RATE_1HZ               0b00010000
+#define DATA_RATE_10HZ              0b00100000
+#define DATA_RATE_25HZ              0b00110000
+#define DATA_RATE_50HZ              0b01000000
+#define DATA_RATE_100HZ             0b01010000
+#define DATA_RATE_200HZ             0b01100000
+#define DATA_RATE_400HZ             0b01110000
+#define DATA_RATE_1344KHZ           0b10010000
+#define LOW_POWER_DISABLED          REGISTER_ZERO
+#define LOW_POWER_ENABLED           0b00001000
+#define Z_AXIS_DISABLED             REGISTER_ZERO
+#define Z_AXIS_ENABLED              0b00000100
+#define Y_AXIS_DISABLED             REGISTER_ZERO
+#define Y_AXIS_ENABLED              0b00000010
+#define X_AXIS_DISABLED             REGISTER_ZERO
+#define X_AXIS_ENABLED              0b00000001
 
-#define 1HZ                         0x17
-#define 10HZ                        0x27
-#define 25HZ                        0x37
-#define 50HZ                        0x47
-#define 100HZ                       0x57
-#define 200HZ                       0x67
-#define 400HZ                       0x77
-#define 1344KHZ                     0x97
-
-#define 1HZ_LOW_POWER               0x1F
-#define 10HZ_LOW_POWER              0x2F
-#define 25HZ_LOW_POWER              0x3F
-#define 50HZ_LOW_POWER              0x4F
-#define 100HZ_LOW_POWER             0x5F
-#define 200HZ_LOW_POWER             0x6F
-#define 400HZ_LOW_POWER             0x7F
-#define 1620KHZ_LOW_POWER           0x8F
-#define 5.376KHZ_LOW_POWER          0x9F
+#define CTRL_REG1_A_SETTINGS( DATA_RATE, LOW_POWER_MODE, Z_AXIS, Y_AXIS, X_AXIS ) DATA_RATE | LOW_POWER_MODE | Z_AXIS | Y_AXIS | X_AXIS
 /*
  * END OF POWER SETTINGS
  */
@@ -96,16 +96,25 @@
 /*
  * HIGH PASS FILTER SETTINGS - REGISTER : CTRL_REG2_A 0x21
  */
-#define CTRL_REG2_A_DEFAULT         0x00
-#define HIGHPASS_NORMAL_RESET       0x00
-#define HIGHPASS_REF_SIGNAL         0x40
-#define HIGHPASS_NORMAL             0xC0
-#define HIGHPASS_AUTO_RESET         0x80
-// W/ FILTERED DATA SELECTION
-#define HIGHPASS_NORMAL_RESET_FDS   0x08
-#define HIGHPASS_REF_SIGNAL_FDS     0x48
-#define HIGHPASS_NORMAL_FDS         0xC8
-#define HIGHPASS_AUTO_RESET_FDS     0x88
+#define CTRL_REG2_A_DEFAULT                         REGISTER_ZERO
+#define HIGHPASS_MODE_NORMAL_WITH_RESET             REGISTER_ZERO
+#define HIGHPASS_MODE_REFERENCE_SIGNAL              0b01000000
+#define HIGHPASS_MODE_NORMAL                        0b10000000
+#define HIGHPASS_MODE_AUTO_RESET_ON_INTERRUPT       0b11000000
+#define HIGHPASS_CUTOFF_FREQ                        REGISTER_ZERO
+/*
+ \brief FDS = Filtered Data Selection
+ */
+#define HIGHPASS_FDS_INTERNAL_BYPASSED_ENABLED      0b00001000
+#define HIGHPASS_FDS_INTERNAL_BYPASSED_DISABLED     REGISTER_ZERO
+#define HIGHPASS_FILTER_ENABLED_FOR_CLICK           0b00000100
+#define HIGHPASS_FILTER_DISABLED_FOR_CLICK          REGISTER_ZERO
+#define HIGHPASS_FILTER_DISABLED_AOI_INT2           REGISTER_ZERO
+#define HIGHPASS_FILTER_ENABLED_AOI_INT2            0b00000010
+#define HIGHPASS_FILTER_ENABLED_AOI_INT1            0b00000001
+#define HIGHPASS_FILTER_DISABLED_AOI_INT1           REGISTER_ZERO
+
+#define CTRL_REG2_A_SETTINGS( HIGHPASS_MODE, HIGHPASS_FDS, HIGHPASS_CLICK_FILTER, HIGHPASS_AOI_INT2, HIGHPASS_AOI_INT1 ) HIGHPASS_MODE | HIGHPASS_CUTOFF_FREQ | HIGHPASS_FDS | HIGHPASS_CLICK_FILTER | HIGHPASS_AOI_INT2 | HIGHPASS_AOI_INT1
 /*
  * END OF HIGH PASS FILTER SETTINGS
  */
@@ -113,14 +122,23 @@
 /*
  * INTERRUPT SETTINGS - REGISTER : CTRL_REG3_A 0x22
  */
-#define CTRL_REG3_A_DEF             0x00
-#define INT1_CLICK_ENABLED_ONLY     0x80
-#define INT1_AOI1_ENABLED_ONLY      0x40
-#define INT1_AOI2_ENABLED_ONLY      0x20
-#define INT1_DRDY1_ENABLED_ONLY     0x10
-#define INT1_DRDY2_ENABLED_ONLY     0x08
-#define INT1_WTM_ENABLED_ONLY       0x04
-#define INT1_OVERRUN_ENABLED_ONLY   0x02
+#define CTRL_REG3_A_DEFAULT                         REGISTER_ZERO
+#define CLICK_INTERRUPT_ON_INT1_ENABLED             0b10000000
+#define CLICK_INTERRUPT_ON_INT1_DISABLED            REGISTER_ZERO
+#define AOI1_INTERRUPT_ON_INT1_ENABLED              0b01000000
+#define AOI1_INTERRUPT_ON_INT1_DISABLED             REGISTER_ZERO
+#define AOI2_INTERRUPT_ON_INT1_ENABLED              0b00100000
+#define AOI2_INTERRUPT_ON_INT1_DISABLED             REGISTER_ZERO
+#define DRDY1_INTERRUPT_ON_INT1_ENABLED             0b00010000
+#define DRDY1_INTERRUPT_ON_INT1_DISABLED            REGISTER_ZERO
+#define DRDY2_INTERRUPT_ON_INT1_ENABLED             0b00001000
+#define DRDY2_INTERRUPT_ON_INT1_DISABLED            REGISTER_ZERO
+#define FIFO_WTM_INTERRUPT_ON_INT1_ENABLED          0b00000100
+#define FIFO_WTM_INTERRUPT_ON_INT1_DISABLED         REGISTER_ZERO
+#define FIFO_OVERRUN_INTERRUPT_ON_INT1_ENABLED      0b00000010
+#define FIFO_OVERRUN_INTERRUPT_ON_INT1_DISABLED     REGISTER_ZERO
+
+#define CTRL_REG3_A_SETTINGS(CLICK, AOI1, AOI2, DRDY1, DRDY2, WTM, OVERRUN) CLICK | AOI1 | AOI2 | DRDY1 | DRDY2 | WTM | OVERRUN
 /*
  * END OF INTERRUPT SETTINGS
  */
@@ -128,16 +146,22 @@
 /*
  * RESOLUTION AND SCALE SETTINGS - REGISTER : CTRL_REG4_A 0x23
  */
-#define CTRL_REG4_A_DEFAULT         0x00
-#define HI_RES_2G_SCALE             0x08
-#define HI_RES_4G_SCALE             0x18
-#define HI_RES_8G_SCALE             0x28
-#define HI_RES_16G_SCALE            0x38
+#define CTRL_REG4_A_DEFAULT                         REGISTER_ZERO
 
-#define LOW_RES_2G_SCALE            0x00
-#define LOW_RES_4G_SCALE            0x10
-#define LOW_RES_8G_SCALE            0x20
-#define LOW_RES_16G_SCALE           0x30
+#define BDU_UPDATE_REGISTERS_CONTINUOUSLY           REGISTER_ZERO
+#define BDU_WAIT_UNTIL_REGISTERS_ARE_READ           0b10000000
+#define BLE_DATA_LSB_AT_LOWER_ADDRESS               REGISTER_ZERO
+#define BLE_DATA_MSB_AT_LOWER_ADDRESS               0b01000000
+#define FS_SCALE_AT_PLUS_MINUS_2G                   REGISTER_ZERO
+#define FS_SCALE_AT_PLUS_MINUS_4G                   0b00010000
+#define FS_SCALE_AT_PLUS_MINUS_8G                   0b00100000
+#define FS_SCALE_AT_PLUS_MINUS_16G                  0b00110000
+#define HR_HI_RES_ENABLED                           0b00001000
+#define HR_HI_RES_DISABLED                          REGISTER_ZERO
+#define SIM_SERIAL_INTERFACE_4_WIRE                 REGISTER_ZERO
+#define SIM_SERIAL_INTERFACE_3_WIRE                 0b00000001
+
+#define CTRL_REG4_A_SETTINGS(BDU, BLE, FS, HR, SIM) BDU | BLE | FS | HR | REGISTER_ZERO | REGISTER_ZERO | SIM
 /*
  * END OF RESOLUTION AND SCALE SETTINGS
  */
@@ -244,57 +268,73 @@
  */
 
 /*
- * CLICK_SRC_A 0x39
+ * CLICK_SRC_A 0x39 TODO : Add all click SRC events
  */
-#define CLICK_SRC_A_DEFAULT
+#define CLICK_SRC_A_DEFAULT         0x00
 /*
  * END OF CLICK_SRC_A
  */
 
 /*
- * CLICK_THS_A 0x3A
+ * CLICK_THS_A 0x3A TODO : Add all click THS events
  */
-#define CLICK_THS_A_DEFAULT
+#define CLICK_THS_A_DEFAULT         0x00
 /*
  * END OF CLICK_THS_A
  */
 
 /*
- * TIME_LIMIT_A 0x3B
+ * TIME_LIMIT_A 0x3B TODO : Need to enable setting the time limit for interrupts
  */
-#define TIME_LIMIT_A_DEFAULT
+#define TIME_LIMIT_A_DEFAULT        0x00
 /*
  * END OF TIME_LIMIT_A
  */
 
 /*
- * TIME_LATENCY_A 0x3C
+ * TIME_LATENCY_A 0x3C TODO : Need to enable setting the time latency for interrupts
  */
-#define TIME_LATENCY_A_DEFAULT
+#define TIME_LATENCY_A_DEFAULT      0x00
 /*
  * END OF TIME_LATENCY_A
  */
 
 /*
- * TIME_WINDOW_A 0x3D
+ * TIME_WINDOW_A 0x3D TODO : Need to enable setting the time window for interrupts
  */
-#define TIME_WINDOW_A_DEFAULT
+#define TIME_WINDOW_A_DEFAULT       0x00
 /*
  * END OF TIME_WINDOW_A
  */
 
 /*
  * CRA_REG_M 0x00
- */
-#define CRA_REG_M_DEFAULT
-/*
+ *
+#define CRA_REG_M_TEMP_OFF_0.75HZ   0x00
+#define CRA_REG_M_TEMP_OFF_1.50HZ   0x04
+#define CRA_REG_M_TEMP_OFF_3.00HZ   0x08
+#define CRA_REG_M_TEMP_OFF_7.50HZ   0x0C
+#define CRA_REG_M_TEMP_OFF_15.0HZ   0x10
+#define CRA_REG_M_TEMP_OFF_30.0HZ   0x14
+#define CRA_REG_M_TEMP_OFF_75.0HZ   0x18
+#define CRA_REG_M_TEMP_OFF_220HZ    0x1C
+
+#define CRA_REG_M_TEMP_ON_0.75HZ    0x80
+#define CRA_REG_M_TEMP_ON_1.50HZ    0x84
+#define CRA_REG_M_TEMP_ON_3.00HZ    0x88
+#define CRA_REG_M_TEMP_ON_7.50HZ    0x8C
+#define CRA_REG_M_TEMP_ON_15.0HZ    0x90
+#define CRA_REG_M_TEMP_ON_30.0HZ    0x94
+#define CRA_REG_M_TEMP_ON_75.0HZ    0x98
+#define CRA_REG_M_TEMP_ON_220HZ     0x9C
+*
  * END OF CRA_REG_M
  */
 
 /*
  * CRB_REG_M 0x01
  */
-#define CRB_REG_M_DEFAULT
+#define CRB_REG_M_DEFAULT           0x20
 /*
  * END OF CRB_REG_M
  */
@@ -302,32 +342,37 @@
 /*
  * MR_REG_M 0x02
  */
-#define MR_REG_M_DEFAULT
+#define MR_REG_M_DEFAULT                0x03
+#define MR_REG_M_CONTINUOUS_CONVERSION  0x00
+#define MR_REG_M_SINGLE_CONVERSION      0x01
+#define MR_REG_M_SLEEP_MODE1            0x02
+#define MR_REG_M_SLEEP_MODE2            0x03
 /*
  * END OF MR_REG_M
  */
 
 /**
- \brief LSM303DLHC : A class that provides control of the LSM303DLHC which contains : accelerometer, magnetometer, temp and gyro.
+ \brief BBBLSM303DLHC : Abstract class that provides control of the BBBLSM303DLHC, inherits I2C methods.
  \version   2.3
  \date      Oct-2015
  \copyright GNU Public License.
  */
+
 class LSM303DLHC : public I2C::I2CDevice {
 
 public:
 
     /**
-     \brief LSM303DLHC : A class that provides control of the LSM303DLHC's accelerometer, magnetometer, temp and gyro.
+     \brief BBBLSM303DLHC : A class that provides control of the BBBLSM303DLHC's accelerometer, magnetometer, temp and gyro.
      */
     LSM303DLHC( );
 
 protected:
 
-    virtual void SetDeviceAddress( int _DeviceAddress ) = 0;
+    void SetDeviceAddress( unsigned char _DeviceAddress ) { this->DeviceAddress = _DeviceAddress; }
 
-    virtual void SetBusId( int _BusId ) = 0;
-    
+    void SetBusId( int _BusId ) { this->BusId = _BusId; }
+
 };
 
 #endif /* SRC_LSM303DLHC_H_ */
