@@ -236,8 +236,8 @@
 #define XLIE_INTERRUPT_ON_X_LOW_ENABLED             0b00000001
 #define XLIE_INTERRUPT_ON_X_LOW_DISABLED            0b00000000
 
-#define SET_INT1_CRG_A( AOI, ZHIE, ZLIE, YHIE, YLIE, XHIE, XLIE ) AOI | ZHIE | ZLIE | YHIE | YLIE | XHIE | XLIE
-#define SET_INT2_CRG_A( AOI, ZHIE, ZLIE, YHIE, YLIE, XHIE, XLIE ) AOI | ZHIE | ZLIE | YHIE | YLIE | XHIE | XLIE
+#define SET_INT1_CFG_A( AOI, ZHIE, ZLIE, YHIE, YLIE, XHIE, XLIE ) AOI | ZHIE | ZLIE | YHIE | YLIE | XHIE | XLIE
+#define SET_INT2_CFG_A( AOI, ZHIE, ZLIE, YHIE, YLIE, XHIE, XLIE ) AOI | ZHIE | ZLIE | YHIE | YLIE | XHIE | XLIE
 /*
  * END OF REGISTER
  */
@@ -334,8 +334,9 @@
  \date      Oct-2015
  \copyright GNU Public License.
  */
+using namespace I2C;
 
-class LSM303DLHC : public I2C::I2CDevice {
+class LSM303DLHC : public I2CDevice {
 
 public:
 
@@ -343,7 +344,6 @@ public:
      \brief BBBLSM303DLHC : A class that provides control of the BBBLSM303DLHC's accelerometer, magnetometer, temp and gyro.
      */
     LSM303DLHC( ){ };
-
 protected:
 
     void SetDeviceAddress( unsigned char _DeviceAddress ) { this->DeviceAddress = _DeviceAddress; }
