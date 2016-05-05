@@ -13,7 +13,7 @@
  *      added in a seperate project shortly...
  */
 
-#include "./LSM303DLHC.h"
+#include "./Libs/LSM303/LSM303DLHC.h"
 #include <bitset>
 
 using namespace std;
