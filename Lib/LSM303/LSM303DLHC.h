@@ -344,12 +344,52 @@ public:
      \brief BBBLSM303DLHC : A class that provides control of the BBBLSM303DLHC's accelerometer, magnetometer, temp and gyro.
      */
     LSM303DLHC( ){ };
+
+    void LoadRecommendedFlightSettings( );
+
+    uint8_t GetPowerSettings( ){ return this->PowerSettings; }
+
+    uint8_t GetHighPassSettings( ){ return this->HighPassSettings; }
+
+    uint8_t GetInt1Settings( ){ return this->Int1Settings; }
+
+    uint8_t GetDataSettings( ){ return this->DataSettings; }
+
+    uint8_t GetMemorySettings( ){ return this->MemorySettings; }
+
+    uint8_t GetInterruptSettings( ){ return this->InterruptSettings; }
+
+    uint8_t GetFIFOSettings( ){ return this->FIFOSettings; }
+
+    uint8_t GetInterrupt1CFGSettings( ){ return this->Interrupt1CFGSettings; }
+
+    uint8_t GetInterrupt2CFGSettings( ){ return this->Interrupt2CFGSettings; }
+
+    uint8_t GetClickCFGSettings( ){ return this->ClickCFGSettings; }
+
+    uint8_t GetClickSRCSettings( ){ return this->ClickSRCSettings; }
+
 protected:
 
     void SetDeviceAddress( unsigned char _DeviceAddress ) { this->DeviceAddress = _DeviceAddress; }
 
     void SetBusId( int _BusId ) { this->BusId = _BusId; }
 
+private:
+
+    uint8_t CommitSetting( uint8_t RegisterAddress, uint8_t RegisterValue );
+
+    uint8_t PowerSettings;
+    uint8_t HighPassSettings;
+    uint8_t Int1Settings;
+    uint8_t DataSettings;
+    uint8_t MemorySettings;
+    uint8_t InterruptSettings;
+    uint8_t FIFOSettings;
+    uint8_t Interrupt1CFGSettings;
+    uint8_t Interrupt2CFGSettings;
+    uint8_t ClickCFGSettings;
+    uint8_t ClickSRCSettings;
 };
 
 #endif /* SRC_LSM303DLHC_H_ */
