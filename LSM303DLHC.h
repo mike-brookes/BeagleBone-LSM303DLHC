@@ -10,7 +10,7 @@
 
 #include "Libs/I2C/I2CDevice.h"
 /*
- * REGISTER ADDRESSES
+ * REGISTER ADDRESS
  */
 //From Table 17. of the LSM303 Data sheet ( Libs/Docs/LSM303DLHC.PDF )
 #define ACCEL_ADDRESS                               0x19    //!< I2C Address of the accelerometer device.
