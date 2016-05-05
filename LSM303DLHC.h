@@ -8,11 +8,11 @@
 #ifndef SRC_LSM303DLHC_H_
 #define SRC_LSM303DLHC_H_
 
-#include "Lib/I2C/I2CDevice.h"
+#include "Libs/I2C/I2CDevice.h"
 /*
  * REGISTER ADDRESSES
  */
-//From Table 17. of the LSM303 Data sheet ( https://www.adafruit.com/datasheets/LSM303DLHC.PDF )
+//From Table 17. of the LSM303 Data sheet ( Libs/Docs/LSM303DLHC.PDF )
 #define ACCEL_ADDRESS                               0x19    //!< I2C Address of the accelerometer device.
 #define CTRL_REG1_A                                 0x20    //!< Read/Write (power control) : Default - 00111
 #define CTRL_REG2_A                                 0x21    //!< Read/Write (filter selection) : Default - 0
@@ -98,7 +98,6 @@
 #define HIGHPASS_MODE_REFERENCE_SIGNAL              0b01000000
 #define HIGHPASS_MODE_NORMAL                        0b10000000
 #define HIGHPASS_MODE_AUTO_RESET_ON_INTERRUPT       0b11000000
-#define HIGHPASS_CUTOFF_FREQ                        0b00000000
 /*
  \brief FDS = Filtered Data Selection
  */
@@ -111,7 +110,7 @@
 #define HIGHPASS_FILTER_ENABLED_AOI_INT1            0b00000001
 #define HIGHPASS_FILTER_DISABLED_AOI_INT1           0b00000000
 
-#define SET_CTRL_REG2_A( HIGHPASS_MODE, HIGHPASS_FDS, HIGHPASS_CLICK_FILTER, HIGHPASS_AOI_INT2, HIGHPASS_AOI_INT1 ) HIGHPASS_MODE | HIGHPASS_CUTOFF_FREQ | HIGHPASS_FDS | HIGHPASS_CLICK_FILTER | HIGHPASS_AOI_INT2 | HIGHPASS_AOI_INT1
+#define SET_CTRL_REG2_A( HIGHPASS_MODE, HIGHPASS_FDS, HIGHPASS_CLICK_FILTER, HIGHPASS_AOI_INT2, HIGHPASS_AOI_INT1 ) HIGHPASS_MODE | HIGHPASS_FDS | HIGHPASS_CLICK_FILTER | HIGHPASS_AOI_INT2 | HIGHPASS_AOI_INT1
 /*
  * END OF HIGH PASS FILTER SETTINGS
  */
@@ -343,7 +342,7 @@ public:
     /**
      \brief BBBLSM303DLHC : A class that provides control of the BBBLSM303DLHC's accelerometer, magnetometer, temp and gyro.
      */
-    LSM303DLHC( );
+    LSM303DLHC( ){ };
 
 protected:
 

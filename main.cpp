@@ -21,27 +21,27 @@ public:
     unsigned short PowerSettings = SET_CTRL_REG1_A( ODR_400HZ, LP_LOW_POWER_DISABLED,
                                                     Z_AXIS_ENABLED,
                                                     Y_AXIS_ENABLED,
-                                                    X_AXIS_ENABLED ); //0b0000000001110111
+                                                    X_AXIS_ENABLED );
 
     unsigned short HighPassSettings = SET_CTRL_REG2_A( HIGHPASS_MODE_NORMAL_WITH_RESET, HIGHPASS_FDS_INTERNAL_BYPASSED_DISABLED,
                                                        HIGHPASS_FILTER_DISABLED_FOR_CLICK, HIGHPASS_FILTER_DISABLED_AOI_INT2,
-                                                       HIGHPASS_FILTER_DISABLED_AOI_INT1 ); //0b0000000000000000
+                                                       HIGHPASS_FILTER_DISABLED_AOI_INT1 );
 
     unsigned short Int1Settings = SET_CTRL_REG3_A( CLICK_INTERRUPT_ON_INT1_DISABLED, AOI1_INTERRUPT_ON_INT1_DISABLED,
                                                    AOI2_INTERRUPT_ON_INT1_DISABLED, DRDY1_INTERRUPT_ON_INT1_DISABLED,
                                                    DRDY2_INTERRUPT_ON_INT1_DISABLED, FIFO_WTM_INTERRUPT_ON_INT1_DISABLED,
-                                                   FIFO_OVERRUN_INTERRUPT_ON_INT1_DISABLED ); //0b0000000000000000
+                                                   FIFO_OVERRUN_INTERRUPT_ON_INT1_DISABLED );
 
     unsigned short DataSettings = SET_CTRL_REG4_A( BDU_UPDATE_REGISTERS_CONTINUOUSLY, BLE_DATA_LSB_AT_LOWER_ADDRESS,
-                                                   FS_SCALE_AT_PLUS_MINUS_16G, HR_HI_RES_ENABLED, SIM_SERIAL_INTERFACE_4_WIRE ); //0000000000111000
+                                                   FS_SCALE_AT_PLUS_MINUS_16G, HR_HI_RES_ENABLED, SIM_SERIAL_INTERFACE_4_WIRE );
 
     unsigned short MemorySettings = SET_CTRL_REG5_A( BOOT_REBOOT_MEM_CONTENT_DISABLED, FIFO_DISABLED,
                                                      LIR_INT1_NOT_LATCHED, D4D_INT1_4D_DISABLED, LIR_INT2_NOT_LATCHED,
-                                                     D4D_INT2_4D_DISABLED); //0b0000000000000000
+                                                     D4D_INT2_4D_DISABLED);
 
     unsigned short InterruptSettings = SET_CTRL6_REG_A( I2_CLICK_INTERRUPT_ON_PAD2_DISABLED, I2_INTERRUPT_1_DISABLED,
                                                         I2_INTERRUPT_2_DISABLED, BOOT_I1_REBOOT_MEMORY_DISABLED,
-                                                        P2_ACT_ACTIVE_FUNCTION_ON_PAD2_DISABLED, H_LACTIVE_INTERRUPT_ACTIVE_HIGH ); //0b0000000000000000
+                                                        P2_ACT_ACTIVE_FUNCTION_ON_PAD2_DISABLED, H_LACTIVE_INTERRUPT_ACTIVE_HIGH );
 
     unsigned short FIFOSettings = SET_FIFO_CTRL_REG_A( FM_BYPASS_MODE, TR_TRIGGER_LINKED_TO_INTERRUPT1 );
 
