@@ -12,7 +12,7 @@
 /*
  * REGISTER ADDRESS
  */
-//From Table 17. of the LSM303 Data sheet ( Libs/Docs/LSM303DLHC.PDF )
+//From Table 17. of the LSM303 Data sheet ( Lib/Docs/LSM303DLHC.PDF )
 #define ACCEL_ADDRESS                               0x19    //!< I2C Address of the accelerometer device.
 #define CTRL_REG1_A                                 0x20    //!< Read/Write (power control) : Default - 00111
 #define CTRL_REG2_A                                 0x21    //!< Read/Write (filter selection) : Default - 0
