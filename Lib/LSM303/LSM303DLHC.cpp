@@ -2,6 +2,7 @@
 // Created by Michael Brookes on 05/05/2016.
 //
 
+#include <bitset>
 #include "./LSM303DLHC.h"
 
 using namespace I2C;
@@ -146,9 +147,95 @@ void LSM303DLHC::LoadRecommendedFlightSettings( ) {
 
 }
 
+LSM303DLHC::LSM303DLHC( ) {
+
+}
+
+void LSM303DLHC::InitAccelerometer( ) {
+    this->InitI2C( );
+    this->GetOutputDataRate( );
+    this->SetDataTimer( );
+    this->StartRecording( );
+}
+
 uint8_t LSM303DLHC::CommitSetting( uint8_t RegisterAddress, uint8_t RegisterValue ){
     this->SetRegisterAddress( RegisterAddress );
     this->SetRegisterValue( RegisterValue );
     this->WriteToDevice( 2 );
     return RegisterValue;
 }
+
+short LSM303DLHC::GetX( ) {
+    return (this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_X_H_A : OUT_X_H_M ) ) << 8 ) |
+           this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_X_L_A : OUT_X_L_M ) );
+}
+
+short LSM303DLHC::GetY( ) {
+    return (this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_Y_H_A : OUT_Y_H_M ) ) << 8 ) |
+           this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_Y_L_A : OUT_Y_L_M ) );
+}
+
+short LSM303DLHC::GetZ( ) {
+    return (this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_Z_H_A : OUT_Z_H_M ) ) << 8 ) |
+           this->GetValueFromRegister( ( unsigned char ) ( ( this->DeviceAddress == ACCEL_ADDRESS ) ? OUT_Z_L_A : OUT_Z_L_M ) );
+}
+
+void LSM303DLHC::SetX( ) { this->X = GetX( ); }
+
+void LSM303DLHC::SetY( ) { this->Y = GetY( ); }
+
+void LSM303DLHC::SetZ( ) { this->Z = GetZ( ); }
+
+//bits required `0000`0000 >> 4 = 0000`0000` & 15 (00001111) = val of the 3 bits
+uint8_t LSM303DLHC::GetOutputDataRate( ) { return uint8_t( ( this->GetPowerSettings( ) >> 4 ) & 15 ); }
+
+//bits required 0000000`0` & 1 (00000001) = val of the 1 bit
+bool LSM303DLHC::XAxisIsEnabled( ) { return uint8_t( this->GetPowerSettings( ) & 1 ); }
+
+//bits required 000000`0`0 >> 1 = 0000000`0` & 1 (00000001) = val of the 1 bit
+bool LSM303DLHC::YAxisIsEnabled( ) { return uint8_t( ( this->GetPowerSettings( ) >> 1 ) & 1 ); }
+
+//bits required 00000`0`00 >> 2 = 0000000`0` & 1 (00000001) = val of the 1 bit
+bool LSM303DLHC::ZAxisIsEnabled( ) { return uint8_t( ( this->GetPowerSettings( ) >> 2 ) & 1 ); }
+
+void LSM303DLHC::SetDataTimer( ) {
+    ( this->DeviceAddress == ACCEL_ADDRESS ) ? this->SetAccelerometerTimerBasedOnODR( ) : SetMagnetometerTimerBasedOnDO( );
+}
+
+void LSM303DLHC::SetAccelerometerTimerBasedOnODR( ) { //ODR = Output Data Rate
+    switch( this->GetOutputDataRate( ) << 4 ) {
+        case ODR_10HZ : this->DataTimer = 1000000 / 10; break; //1Hz = 1000000 Micro Seconds
+        case ODR_25HZ : this->DataTimer = 1000000 / 25; break;
+        case ODR_50HZ : this->DataTimer = 1000000 / 50; break;
+        case ODR_100HZ : this->DataTimer = 1000000 / 100; break;
+        case ODR_200HZ : this->DataTimer = 1000000 / 200; break;
+        case ODR_400HZ : this->DataTimer = 1000000 / 400; break;
+        case POWER_OFF : this->DataTimer = 0; break;
+        default : this->DataTimer = 1000000;
+    }
+}
+//TODO: this function is incomplete.
+void LSM303DLHC::SetMagnetometerTimerBasedOnDO( ) { //DO = Data Output
+    switch( this->GetOutputDataRate( ) << 4 ) {
+        case ODR_10HZ : this->DataTimer = 1000000 / 10; break; //1Hz = 1000000 Micro Seconds
+        case ODR_25HZ : this->DataTimer = 1000000 / 25; break;
+        case ODR_50HZ : this->DataTimer = 1000000 / 50; break;
+        case ODR_100HZ : this->DataTimer = 1000000 / 100; break;
+        case ODR_200HZ : this->DataTimer = 1000000 / 200; break;
+        case ODR_400HZ : this->DataTimer = 1000000 / 400; break;
+        case POWER_OFF : this->DataTimer = 0; break;
+        default : this->DataTimer = 1000000;
+    }
+}
+
+void* LSM303DLHC::RecordAllValues( void *_LSM303 ) {
+    LSM303DLHC* LSM303 = ( LSM303DLHC* ) _LSM303;
+    while( LSM303->DataTimer ) { //DataTimer will be 0 if the LSM303 is powered off.
+        if( LSM303->XAxisIsEnabled( ) ) LSM303->SetX( );
+        if( LSM303->YAxisIsEnabled( ) ) LSM303->SetY( );
+        if( LSM303->ZAxisIsEnabled( ) ) LSM303->SetZ( );
+        usleep( LSM303->DataTimer );
+    }
+}
+
+void LSM303DLHC::StartRecording( ) { pthread_create( &this->LSM303Thread, NULL, LSM303DLHC::RecordAllValues, this ); }

@@ -9,6 +9,8 @@
 #define SRC_LSM303DLHC_H_
 
 #include "../I2C/I2CDevice.h"
+
+#define MICRO_SECOND = 1000000
 /*
  * REGISTER ADDRESS
  */
@@ -343,7 +345,7 @@ public:
     /**
      \brief BBBLSM303DLHC : A class that provides control of the BBBLSM303DLHC's accelerometer, magnetometer, temp and gyro.
      */
-    LSM303DLHC( ){ };
+    LSM303DLHC( );
 
     void LoadRecommendedFlightSettings( );
 
@@ -369,16 +371,21 @@ public:
 
     uint8_t GetClickSRCSettings( ){ return this->ClickSRCSettings; }
 
+    short X, Y, Z;
+
+    unsigned int DataTimer;
+
 protected:
 
     void SetDeviceAddress( unsigned char _DeviceAddress ) { this->DeviceAddress = _DeviceAddress; }
 
     void SetBusId( int _BusId ) { this->BusId = _BusId; }
 
+    void InitAccelerometer( );
+
 private:
 
     uint8_t CommitSetting( uint8_t RegisterAddress, uint8_t RegisterValue );
-
     uint8_t PowerSettings;
     uint8_t HighPassSettings;
     uint8_t Int1Settings;
@@ -390,6 +397,39 @@ private:
     uint8_t Interrupt2CFGSettings;
     uint8_t ClickCFGSettings;
     uint8_t ClickSRCSettings;
+
+    void StartRecording( );
+
+    static void* RecordAllValues(  void *_LSM303  );
+
+    void SetDataTimer( );
+
+    void SetAccelerometerTimerBasedOnODR( );
+
+    void SetMagnetometerTimerBasedOnDO( );
+
+    short GetX( );
+
+    short GetY( );
+
+    short GetZ( );
+
+    void SetX( );
+
+    void SetY( );
+
+    void SetZ( );
+
+    uint8_t GetOutputDataRate( );
+
+    bool XAxisIsEnabled( );
+
+    bool YAxisIsEnabled( );
+
+    bool ZAxisIsEnabled( );
+
+    pthread_t LSM303Thread;
+
 };
 
 #endif /* SRC_LSM303DLHC_H_ */

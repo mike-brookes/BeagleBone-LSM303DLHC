@@ -10,7 +10,7 @@
  *      It then uses the Macros available from the LSM303DLHC.h to configure the device
  *      I have added a recommended flight settings as these are the settings I use on the device.
  *      This class is a basic class - it doesn't retrieve values from the accelerometer but this functionality will be
- *      added in a seperate project shortly...
+ *      added in a separate project shortly...
  */
 
 #include "./Lib/LSM303/LSM303DLHC.h"
