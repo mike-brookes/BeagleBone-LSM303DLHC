@@ -119,7 +119,6 @@ void LSM303DLHC::LoadRecommendedFlightSettings( ) {
                             XHIE_INTERRUPT_ON_X_HIGH_DISABLED,
                             XLIE_INTERRUPT_ON_X_LOW_DISABLED
                     )
-
             );
 
     this->ClickCFGSettings =
@@ -145,6 +144,23 @@ void LSM303DLHC::LoadRecommendedFlightSettings( ) {
                     )
             );
 
+    this->CRARegMSettings =
+            this->CommitSetting(
+                    CRA_REG_M,
+                    SET_CRA_REG_M(
+                            TEMP_ENABLED,
+                            DO2_220Hz
+                    )
+            );
+
+    this->CRARegMSettings =
+            this->CommitSetting(
+                    MR_REG_M,
+                    SET_MR_REG_M(
+                            MD_CONTINUOUS_CONVERSION_MODE
+                    )
+            );
+
 }
 
 LSM303DLHC::LSM303DLHC( ) {
@@ -152,7 +168,6 @@ LSM303DLHC::LSM303DLHC( ) {
 }
 
 void LSM303DLHC::InitAccelerometer( ) {
-    this->InitI2C( );
     this->GetOutputDataRate( );
     this->SetDataTimer( );
     this->StartRecording( );
@@ -186,7 +201,7 @@ void LSM303DLHC::SetY( ) { this->Y = GetY( ); }
 
 void LSM303DLHC::SetZ( ) { this->Z = GetZ( ); }
 
-//bits required `0000`0000 >> 4 = 0000`0000` & 15 (00001111) = val of the 3 bits
+//bits required `0000`0000 >> 4 = 0000`0000` & 15 (00001111) = val of the 4 bits
 uint8_t LSM303DLHC::GetOutputDataRate( ) { return uint8_t( ( this->GetPowerSettings( ) >> 4 ) & 15 ); }
 
 //bits required 0000000`0` & 1 (00000001) = val of the 1 bit
@@ -198,28 +213,21 @@ bool LSM303DLHC::YAxisIsEnabled( ) { return uint8_t( ( this->GetPowerSettings( )
 //bits required 00000`0`00 >> 2 = 0000000`0` & 1 (00000001) = val of the 1 bit
 bool LSM303DLHC::ZAxisIsEnabled( ) { return uint8_t( ( this->GetPowerSettings( ) >> 2 ) & 1 ); }
 
+//bits required 000`000`00 >> 2 = 00000`000` & 7 (00000111) = val of the 3 bits
+uint8_t LSM303DLHC::GetDataOutputRate( ) { return uint8_t ( ( this->GetCRARegMSettings( ) >> 2 ) & 7 ); }
+
+//bits required 000000`00` & 3 (00000011) = val of the 2 bits
+uint8_t LSM303DLHC::MagnetometerIsEnabled( ) { return uint8_t ( ( this->GetMRRegMSettings( ) ) & 3 ); }
+
 void LSM303DLHC::SetDataTimer( ) {
     ( this->DeviceAddress == ACCEL_ADDRESS ) ? this->SetAccelerometerTimerBasedOnODR( ) : SetMagnetometerTimerBasedOnDO( );
 }
 
 void LSM303DLHC::SetAccelerometerTimerBasedOnODR( ) { //ODR = Output Data Rate
     switch( this->GetOutputDataRate( ) << 4 ) {
-        case ODR_10HZ : this->DataTimer = 1000000 / 10; break; //1Hz = 1000000 Micro Seconds
-        case ODR_25HZ : this->DataTimer = 1000000 / 25; break;
-        case ODR_50HZ : this->DataTimer = 1000000 / 50; break;
-        case ODR_100HZ : this->DataTimer = 1000000 / 100; break;
-        case ODR_200HZ : this->DataTimer = 1000000 / 200; break;
-        case ODR_400HZ : this->DataTimer = 1000000 / 400; break;
-        case POWER_OFF : this->DataTimer = 0; break;
-        default : this->DataTimer = 1000000;
-    }
-}
-//TODO: this function is incomplete.
-void LSM303DLHC::SetMagnetometerTimerBasedOnDO( ) { //DO = Data Output
-    switch( this->GetOutputDataRate( ) << 4 ) {
-        case ODR_10HZ : this->DataTimer = 1000000 / 10; break; //1Hz = 1000000 Micro Seconds
-        case ODR_25HZ : this->DataTimer = 1000000 / 25; break;
-        case ODR_50HZ : this->DataTimer = 1000000 / 50; break;
+        case ODR_10HZ  : this->DataTimer = 1000000 / 10; break; //1Hz = 1000000 Micro Seconds
+        case ODR_25HZ  : this->DataTimer = 1000000 / 25; break;
+        case ODR_50HZ  : this->DataTimer = 1000000 / 50; break;
         case ODR_100HZ : this->DataTimer = 1000000 / 100; break;
         case ODR_200HZ : this->DataTimer = 1000000 / 200; break;
         case ODR_400HZ : this->DataTimer = 1000000 / 400; break;
@@ -228,7 +236,21 @@ void LSM303DLHC::SetMagnetometerTimerBasedOnDO( ) { //DO = Data Output
     }
 }
 
-void* LSM303DLHC::RecordAllValues( void *_LSM303 ) {
+void LSM303DLHC::SetMagnetometerTimerBasedOnDO( ) { //DO = Data Output
+    switch( this->GetDataOutputRate( ) << 2 ) {
+        case DO2_0_75Hz : this->DataTimer = 1333333; break; //1.5Hz = 1333333 Micro Seconds
+        case DO2_1_5Hz  : this->DataTimer = (unsigned int)(1000000 / 1.5); break;
+        case DO2_3_0Hz  : this->DataTimer = 1000000 / 3; break;
+        case DO2_7_5Hz  : this->DataTimer = (unsigned int)(1000000 / 7.5); break;
+        case DO2_15Hz   : this->DataTimer = 1000000 / 15; break;
+        case DO2_30Hz   : this->DataTimer = 1000000 / 30; break;
+        case DO2_75Hz   : this->DataTimer = 1000000 / 75; break;
+        case DO2_220Hz  : this->DataTimer = 1000000 / 220; break;
+        default : this->DataTimer = 1333333;
+    }
+}
+
+void* LSM303DLHC::RecordAccelerometerValues( void *_LSM303 ) {
     LSM303DLHC* LSM303 = ( LSM303DLHC* ) _LSM303;
     while( LSM303->DataTimer ) { //DataTimer will be 0 if the LSM303 is powered off.
         if( LSM303->XAxisIsEnabled( ) ) LSM303->SetX( );
@@ -238,4 +260,19 @@ void* LSM303DLHC::RecordAllValues( void *_LSM303 ) {
     }
 }
 
-void LSM303DLHC::StartRecording( ) { pthread_create( &this->LSM303Thread, NULL, LSM303DLHC::RecordAllValues, this ); }
+void* LSM303DLHC::RecordMagnetometerValues( void *_LSM303 ) {
+    LSM303DLHC* LSM303 = ( LSM303DLHC* ) _LSM303;
+    while( LSM303->MagnetometerIsEnabled( ) == 0 ) { //"1 = Singe Conversion Mode", "Sleep Mode" with values of 2 or 3
+        LSM303->SetX( );
+        LSM303->SetY( );
+        LSM303->SetZ( );
+        usleep( LSM303->DataTimer );
+    }
+}
+
+void LSM303DLHC::StartRecording( ) {
+    if( this->DeviceAddress == ACCEL_ADDRESS )
+        pthread_create( &this->LSM303AccelThread, NULL, LSM303DLHC::RecordAccelerometerValues, this );
+    else
+        pthread_create( &this->LSM303MagThread, NULL, LSM303DLHC::RecordMagnetometerValues, this );
+}
