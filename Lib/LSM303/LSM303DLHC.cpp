@@ -153,7 +153,7 @@ void LSM303DLHC::LoadRecommendedFlightSettings( ) {
                     )
             );
 
-    this->CRARegMSettings =
+    this->MRRegMSettings =
             this->CommitSetting(
                     MR_REG_M,
                     SET_MR_REG_M(
@@ -169,6 +169,12 @@ LSM303DLHC::LSM303DLHC( ) {
 
 void LSM303DLHC::InitAccelerometer( ) {
     this->GetOutputDataRate( );
+    this->SetDataTimer( );
+    this->StartRecording( );
+}
+
+void LSM303DLHC::InitMagnetometer( ) {
+    this->GetDataOutputRate( );
     this->SetDataTimer( );
     this->StartRecording( );
 }
@@ -238,7 +244,7 @@ void LSM303DLHC::SetAccelerometerTimerBasedOnODR( ) { //ODR = Output Data Rate
 
 void LSM303DLHC::SetMagnetometerTimerBasedOnDO( ) { //DO = Data Output
     switch( this->GetDataOutputRate( ) << 2 ) {
-        case DO2_0_75Hz : this->DataTimer = 1333333; break; //1.5Hz = 1333333 Micro Seconds
+        case DO2_0_75Hz : this->DataTimer = 1333333; break; //0.75Hz = 1333333 Micro Seconds
         case DO2_1_5Hz  : this->DataTimer = (unsigned int)(1000000 / 1.5); break;
         case DO2_3_0Hz  : this->DataTimer = 1000000 / 3; break;
         case DO2_7_5Hz  : this->DataTimer = (unsigned int)(1000000 / 7.5); break;

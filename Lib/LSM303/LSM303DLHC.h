@@ -377,6 +377,8 @@ public:
 
     void InitAccelerometer( );
 
+    void InitMagnetometer( );
+
     short X, Y, Z;
 
     unsigned int DataTimer;
