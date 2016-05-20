@@ -23,11 +23,11 @@
 #define TWO_BYTES       2               //!< Used for specifying how many bytes to write
 #define MAX_BUFF        1024            //!< Used to store fatal error.
 
-namespace I2C {
+namespace abI2C {
 
     using namespace std;
 
-    class I2CDevice : public IDevice::IDevice {
+    class I2CDevice : public abIDevice::IDevice {
 
     public:
         /**
@@ -46,7 +46,7 @@ namespace I2C {
          \fn Public InitDevice
          \brief Requires the device address and bus id to be configured.
          */
-        void InitI2C( ) throw( I2CSetupException& );
+        void InitDevice( ) throw( I2CSetupException& );
 
         /**
          \fn Public GetValueFromRegister

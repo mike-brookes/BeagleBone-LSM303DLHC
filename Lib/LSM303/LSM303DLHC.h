@@ -336,7 +336,7 @@
  \date      Oct-2015
  \copyright GNU Public License.
  */
-using namespace I2C;
+using namespace abI2C;
 
 class LSM303DLHC : public I2CDevice {
 

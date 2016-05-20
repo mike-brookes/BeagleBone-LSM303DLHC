@@ -24,7 +24,7 @@ public:
     LSM303_Accelerometer( unsigned char _DeviceAddress, int _BusId ) {
         this->SetDeviceAddress( _DeviceAddress );
         this->SetBusId( _BusId );
-        this->InitI2C( );
+        this->InitDevice( );
         this->LoadRecommendedFlightSettings( );
         this->Init( );
     }
@@ -32,7 +32,7 @@ public:
 };
 
 int main ( void ) {
-    using namespace I2C;
+    using namespace abI2C;
 
     LSM303_Accelerometer *Accelerometer;
 

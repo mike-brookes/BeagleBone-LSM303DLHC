@@ -5,7 +5,7 @@
 #include <bitset>
 #include "./LSM303DLHC.h"
 
-using namespace I2C;
+using namespace abI2C;
 
 void LSM303DLHC::LoadRecommendedFlightSettings( ) {
     if( this->DeviceAddress == ACCEL_ADDRESS ) {
