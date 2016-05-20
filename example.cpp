@@ -24,7 +24,9 @@ public:
     LSM303_Accelerometer( unsigned char _DeviceAddress, int _BusId ) {
         this->SetDeviceAddress( _DeviceAddress );
         this->SetBusId( _BusId );
-        this->InitDevice( );
+        this->InitI2C( );
+        this->LoadRecommendedFlightSettings( );
+        this->InitAccelerometer( );
     }
 
 };
@@ -49,5 +51,12 @@ int main ( void ) {
     cout << "Interrupt2 CFG Settings = " << bitset<8>( Accelerometer->GetInterrupt2CFGSettings( ) ) << endl;
     cout << "Click CFG Settings = " << bitset<8>( Accelerometer->GetClickCFGSettings( ) ) << endl;
     cout << "Click SRC Settings = " << bitset<8>( Accelerometer->GetClickSRCSettings( ) ) << endl;
+
+    while(1){
+        cout << "Accelerometer - Current X val = " << Accelerometer->X << endl;
+        cout << "Accelerometer - Current Y val = " << Accelerometer->Y << endl;
+        cout << "Accelerometer - Current Z val = " << Accelerometer->Z << endl;
+        usleep( Accelerometer->DataTimer + 1000000 ); //speed of data + 1 second for display purposes, (+1000000 not required for production).
+    }
 
 }
