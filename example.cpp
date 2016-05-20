@@ -26,7 +26,7 @@ public:
         this->SetBusId( _BusId );
         this->InitI2C( );
         this->LoadRecommendedFlightSettings( );
-        this->InitAccelerometer( );
+        this->Init( );
     }
 
 };
